@@ -4,6 +4,7 @@ import locations from './store/locations';
 import formUI from './views/form';
 import ticketsUI from './views/tickets';
 import currencyUI from './views/currency';
+import favoritsUi from './views/favorits'
 
 document.addEventListener('DOMContentLoaded', e => {
   const form = formUI.form;
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', e => {
   }
 
   async function onFormSubmit() {
+    favoritsUi.clearContainer(true)
     const origin = locations.getCityCodeByKey(formUI.originValue);
     const destination = locations.getCityCodeByKey(formUI.destinationValue);
     const depart_date = formUI.departDateValue;
@@ -36,7 +38,10 @@ document.addEventListener('DOMContentLoaded', e => {
       currency,
     });
 
-    ticketsUI.renderTickets(locations.lastSearch);
+    ticketsUI.renderTickets(locations.lastSearch, (ticketId) => {
+      const favorit = locations.lastSearch.find(ticket => ticket.id === ticketId)
+      favoritsUi.addFavorit(favorit)
+    });
     console.log(locations.lastSearch);
   }
 });

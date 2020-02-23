@@ -90,9 +90,9 @@ class Locations {
 
   serializeTickets(tickets) {
     return Object.values(tickets).map(ticket => {
-      console.log(ticket);
       return {
         ...ticket,
+        id: Math.random().toString(36).substring(2) + Date.now().toString(36),
         origin_name: this.getCityNameByCode(ticket.origin),
         destination_name: this.getCityNameByCode(ticket.destination),
         airline_logo: this.getAirlineLogoByCode(ticket.airline),

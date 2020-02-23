@@ -3,10 +3,10 @@ import currencyUI from './currency';
 class TicketsUI {
   constructor(currency) {
     this.container = document.querySelector('.tickets-sections .row');
-    this.currencySymbol = currency.currencySymbol;
+    this.currency = currency;
   }
 
-  renderTickets(tickets) {
+  renderTickets(tickets, callback) {
     this.clearContainer();
 
     if (!tickets.length) {
@@ -17,11 +17,21 @@ class TicketsUI {
     let fragment = '';
 
     tickets.forEach(ticket => {
-      const template = TicketsUI.ticketTemplate(ticket, this.currencySymbol);
+      const template = TicketsUI.ticketTemplate(ticket, this.currency.currencySymbol);
       fragment += template;
     });
 
     this.container.insertAdjacentHTML('afterbegin', fragment);
+  
+    this.container.addEventListener('click', e => {
+      if (e.target.localName === 'a') {
+        e.preventDefault()
+        if (callback && typeof callback === 'function') {
+          const ticketId = e.target.hash ?e.target.hash.replace('#','') : null
+          callback(ticketId)
+        }
+      }
+    })
   }
 
   clearContainer() {
@@ -65,6 +75,9 @@ class TicketsUI {
           <span class="ticket-transfers">Пересадок: ${ticket.transfers}</span>
           <span class="ticket-flight-number">Номер рейса: ${ticket.flight_number}</span>
         </div>
+        <a href="#${ticket.id}"
+        class="waves-effect waves-light btn-small green darken-1 add-favorite ml-auto"
+        >Add to favorites</a>
       </div>
     </div>
     `;
